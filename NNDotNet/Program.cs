@@ -203,6 +203,32 @@ double Backward(
     var a2 = Sigmoid(z2); 
     return (a1, a2);
 }
+(double[] z1, double[] hiddenOutput, double[] outputOutput) ForwardReLU(double[] x)
+{
+    var z1 = ProdutoEscalar(x, W1, b1);
+    var a1 = ReLU(z1);
+    var z2 = ProdutoEscalar(a1, W2, b2);
+    var a2 = Softmax(z2);
+    return (z1,a1, a2);
+}
+
+double[] Softmax(double[] z)
+{
+    double[] result = new double[z.Length];
+    double max = z.Max();
+    double sum = 0.0;
+    for (int i = 0; i < z.Length; i++)
+    {
+        result[i] = Math.Exp(z[i] - max);
+        sum += result[i];
+    }
+
+    for (int i = 0; i < z.Length; i++)
+    {
+        result[i] /= sum;
+    }
+    return result;
+}
 //Iterar sobre os neurônios normalizando com sigmoid
 double[] Sigmoid(double[] z)
 {
@@ -214,6 +240,26 @@ double[] Sigmoid(double[] z)
     return resultado;
 }
 
+double[] ReLU(double[] z)
+{
+    double[] result = new double[z.Length];
+    for (int i = 0; i < z.Length; i++)
+    {
+        result[i] = Math.Max(0, z[i]);
+    }
+
+    return result;
+}
+
+double[] ReLUDerivate(double[] z)
+{
+    double[] result = new double[z.Length];
+    for (int i = 0; i < z.Length; i++)
+    {
+        result[i] = z[i] > 0 ? 1 : 0;
+    }
+    return result;
+}
 double[] SigmoidDerivate(double[] x)
 {
     double[] resultado = new double[x.Length];
